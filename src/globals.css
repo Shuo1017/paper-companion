@@ -1,0 +1,592 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "../vendor/shadcn-tailwind-4.13.0.css";
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility scrollbar-gutter-stable {
+  scrollbar-gutter: stable;
+}
+
+/* ============ 论文通解 · 视觉主题：知识星海 ============
+   纯黑宇宙底 + 发光靛蓝 + 玻璃态卡片。全站强制暗色，
+   氛围由三层承担：径向渐变星云 + Canvas 星点 + 噪点叠加。
+   思维导图作为阅读页顶部的动态树枝，是整站的记忆点。 */
+
+:root {
+  /* 语义令牌：暗色宇宙 */
+  --background: #04050a;
+  --foreground: #e8ecf5;
+  --card: rgba(20, 22, 40, 0.55);
+  --card-solid: #101226;
+  --card-foreground: #e8ecf5;
+  --popover: rgba(16, 18, 40, 0.92);
+  --popover-foreground: #e8ecf5;
+  --primary: #a5b4fc;
+  --primary-foreground: #05071a;
+  --secondary: rgba(30, 34, 60, 0.62);
+  --secondary-foreground: #e8ecf5;
+  --muted: rgba(30, 34, 60, 0.5);
+  --muted-foreground: #a7aec4;
+  --accent: rgba(80, 92, 190, 0.28);
+  --accent-foreground: #e8ecf5;
+  --destructive: #f87171;
+  --border: rgba(232, 236, 245, 0.14);
+  --input: rgba(232, 236, 245, 0.22);
+  --ring: #a5b4fc;
+  --chart-1: #a5b4fc;
+  --chart-2: #6ee7b7;
+  --chart-3: #93c5fd;
+  --chart-4: #fbbf24;
+  --chart-5: #c4b5fd;
+  --radius: 0.75rem;
+  --sidebar: rgba(10, 12, 28, 0.85);
+  --sidebar-foreground: #e8ecf5;
+  --sidebar-primary: #a5b4fc;
+  --sidebar-primary-foreground: #05071a;
+  --sidebar-accent: rgba(30, 34, 60, 0.5);
+  --sidebar-accent-foreground: #e8ecf5;
+  --sidebar-border: rgba(232, 236, 245, 0.14);
+  --sidebar-ring: #a5b4fc;
+
+  /* 氛围：星云三团 + 文本光晕 */
+  --nebula-1: rgba(120, 130, 255, 0.28);
+  --nebula-2: rgba(160, 100, 255, 0.18);
+  --nebula-3: rgba(80, 200, 255, 0.14);
+  --glow-accent: 0 0 24px rgba(165, 180, 252, 0.35);
+  --glow-strong: 0 0 32px rgba(165, 180, 252, 0.55);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: var(--site-font);
+  --font-display: "SF Pro Display", "Segoe UI Variable Display", "PingFang SC",
+    "HarmonyOS Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+/* Nudge 变量：默认全部落进暗色宇宙；用户仍可通过工作台调 radius / spacing / type / motion。 */
+:root {
+  --site-bg: #04050a;
+  --site-fg: #e8ecf5;
+  --site-accent: #a5b4fc;
+  --site-on-accent: #05071a;
+  --site-surface: rgba(20, 22, 40, 0.55);
+  --site-muted: #a7aec4;
+  --site-border: rgba(232, 236, 245, 0.14);
+  --site-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+    "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Hiragino Sans GB",
+    "Microsoft YaHei", system-ui, sans-serif;
+  --site-radius: 12px;
+  --site-space: 1;
+  --site-type: 1;
+  --site-motion: 1;
+}
+
+@theme inline {
+  --spacing: calc(0.25rem * var(--site-space));
+  --text-xs: calc(.75rem * var(--site-type));
+  --text-sm: calc(.875rem * var(--site-type));
+  --text-base: calc(1rem * var(--site-type));
+  --text-lg: calc(1.125rem * var(--site-type));
+  --text-xl: calc(1.25rem * var(--site-type));
+  --text-2xl: calc(1.5rem * var(--site-type));
+  --text-3xl: calc(1.875rem * var(--site-type));
+  --text-4xl: calc(2.25rem * var(--site-type));
+  --text-5xl: calc(3rem * var(--site-type));
+  --text-6xl: calc(3.75rem * var(--site-type));
+  --text-7xl: calc(4.5rem * var(--site-type));
+  --text-8xl: calc(6rem * var(--site-type));
+  --text-9xl: calc(8rem * var(--site-type));
+  --default-transition-duration: calc(180ms * var(--site-motion));
+}
+
+html, body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  font-family: var(--site-font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: 0.01em;
+}
+
+::selection {
+  background: rgba(165, 180, 252, 0.38);
+  color: #ffffff;
+}
+
+@layer base {
+  button, a { transition-duration: calc(180ms * var(--site-motion)); }
+  @media (prefers-reduced-motion: reduce) {
+    button, a { transition-duration: 0ms; }
+  }
+  /* 卡片、对话框、下拉面板自然带上玻璃态 */
+  .bg-card, [data-slot="card"] {
+    background: var(--card);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border-color: var(--border);
+  }
+  .bg-popover,
+  [data-slot="dialog-content"],
+  [data-slot="popover-content"] {
+    background: var(--popover);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border-color: var(--border);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(165, 180, 252, 0.08);
+  }
+  .bg-secondary { backdrop-filter: blur(10px); }
+  .bg-muted { backdrop-filter: blur(8px); }
+}
+
+/* ============ 星空氛围层 ============ */
+.cosmos-nebula {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(70rem 50rem at 12% -12%, var(--nebula-1), transparent 62%),
+    radial-gradient(60rem 46rem at 96% 8%, var(--nebula-2), transparent 58%),
+    radial-gradient(80rem 50rem at 55% 108%, var(--nebula-3), transparent 60%);
+  filter: blur(6px);
+  opacity: 0.9;
+}
+.cosmos-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.cosmos-starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.cosmos-shell { position: relative; z-index: 2; }
+
+/* ============ 产品专属样式 ============ */
+
+/* 品牌标记：从纯色实心改为发光渐变方块 */
+.seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: calc(var(--site-radius) * 0.6);
+  background: linear-gradient(145deg, rgba(165, 180, 252, 0.95), rgba(120, 130, 235, 0.75));
+  color: var(--site-on-accent);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  box-shadow: 0 0 18px rgba(165, 180, 252, 0.45),
+    inset 0 0 12px rgba(255, 255, 255, 0.15);
+  user-select: none;
+}
+
+.font-display { letter-spacing: -0.01em; }
+h1.font-display, h2.font-display { text-shadow: var(--glow-accent); }
+
+/* 句子下划线：改成发光线 */
+.sentence-clickable {
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color calc(180ms * var(--site-motion)),
+    box-shadow calc(180ms * var(--site-motion));
+}
+.sentence-clickable:hover {
+  background: rgba(165, 180, 252, 0.08);
+  box-shadow: 0 1px 0 0 rgba(165, 180, 252, 0.65),
+    0 0 20px rgba(165, 180, 252, 0.12);
+}
+.sentence-clickable:focus-visible {
+  outline: 2px solid var(--site-accent);
+  outline-offset: 3px;
+}
+.sentence-active {
+  background: rgba(165, 180, 252, 0.12);
+  box-shadow: 0 1px 0 0 var(--site-accent),
+    0 0 24px rgba(165, 180, 252, 0.18);
+}
+
+.annotation-card {
+  border-left: 2px solid var(--site-accent);
+  box-shadow: -1px 0 12px rgba(165, 180, 252, 0.28);
+  background: linear-gradient(90deg,
+    rgba(165, 180, 252, 0.08), rgba(20, 22, 40, 0.35));
+}
+
+.flip-card { perspective: 1000px; }
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform calc(500ms * var(--site-motion));
+  transform-style: preserve-3d;
+}
+.flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+.flip-card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flip-card-back { transform: rotateY(180deg); }
+@media (prefers-reduced-motion: reduce) {
+  .flip-card-inner { transition: none; }
+  .flip-card.flipped .flip-card-inner { transform: none; }
+  .flip-card.flipped .flip-card-front { visibility: hidden; }
+  .flip-card.flipped .flip-card-back { transform: none; }
+}
+
+.level-tick { transition: color calc(180ms * var(--site-motion)); }
+
+.streaming-caret {
+  display: inline-block;
+  animation: caret-blink calc(1s * var(--site-motion)) steps(2, start) infinite;
+  color: var(--site-accent);
+  text-shadow: 0 0 12px rgba(165, 180, 252, 0.7);
+}
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .streaming-caret { animation: none; }
+}
+
+/* ============ 论证脉络思维导图 · 树枝状 SVG ============ */
+.mind-canvas {
+  position: relative;
+  overflow: auto;
+  max-height: 460px;
+  padding: 8px 16px 14px;
+  border-radius: var(--site-radius);
+  background: linear-gradient(180deg,
+    rgba(165, 180, 252, 0.05) 0%,
+    rgba(20, 22, 40, 0.2) 55%,
+    rgba(20, 22, 40, 0.45) 100%);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  /* 自由拖动平移：抓取光标，隐藏滚动条（无滑块），仍可滚轮/拖动 */
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.mind-canvas.is-panning { cursor: grabbing; }
+.mind-canvas::-webkit-scrollbar { width: 0; height: 0; display: none; }
+.mind-svg { display: block; }
+
+/* 树枝：贝塞尔曲线，用 stroke-dasharray 生长动画 */
+.mind-svg .branch {
+  fill: none;
+  stroke: url(#branchGradient);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+  animation: branch-grow calc(900ms * var(--site-motion)) cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--delay) * 1ms);
+  filter: drop-shadow(0 0 6px rgba(165, 180, 252, 0.35));
+}
+@keyframes branch-grow {
+  to { stroke-dashoffset: 0; }
+}
+
+/* 节点弹入 */
+.mind-node {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: node-pop calc(500ms * var(--site-motion)) cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--delay) * 1ms);
+  cursor: pointer;
+}
+@keyframes node-pop {
+  from { opacity: 0; transform: scale(0.4); }
+  60% { opacity: 1; transform: scale(1.08); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 节点卡片：四级玻璃态发光，文字落在卡片底上不再互相压字 */
+.mind-card {
+  fill: rgba(20, 22, 40, 0.72);
+  stroke: rgba(165, 180, 252, 0.32);
+  stroke-width: 1.2;
+  filter: drop-shadow(0 2px 10px rgba(4, 5, 10, 0.5));
+  transition: stroke calc(180ms * var(--site-motion)),
+    filter calc(180ms * var(--site-motion));
+}
+.mind-card.is-root {
+  fill: rgba(79, 70, 229, 0.26);
+  stroke: rgba(219, 227, 255, 0.6);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 16px rgba(165, 180, 252, 0.45));
+}
+.mind-card.is-section {
+  fill: rgba(30, 34, 60, 0.78);
+  stroke: rgba(147, 197, 253, 0.5);
+}
+.mind-card.is-point {
+  fill: rgba(24, 26, 44, 0.72);
+  stroke: rgba(196, 181, 253, 0.4);
+}
+.mind-card.is-term {
+  fill: rgba(20, 22, 40, 0.66);
+  stroke: rgba(240, 171, 252, 0.34);
+}
+
+/* 卡片左侧锚点：保留星空里的小光点 */
+.node-anchor {
+  pointer-events: none;
+}
+.node-anchor.is-root {
+  fill: #dbe3ff;
+  filter: drop-shadow(0 0 6px rgba(219, 227, 255, 0.9));
+}
+.node-anchor.is-section {
+  fill: #93c5fd;
+  filter: drop-shadow(0 0 5px rgba(147, 197, 253, 0.75));
+}
+.node-anchor.is-point {
+  fill: #c4b5fd;
+  filter: drop-shadow(0 0 4px rgba(196, 181, 253, 0.65));
+}
+.node-anchor.is-term {
+  fill: #f0abfc;
+  filter: drop-shadow(0 0 4px rgba(240, 171, 252, 0.6));
+}
+
+/* 卡片内文字：深底浅字，无需重描边 */
+.node-label {
+  fill: #eef1f8;
+  font-size: 12.5px;
+  font-family: var(--site-font);
+  pointer-events: none;
+  letter-spacing: 0.01em;
+}
+.node-label.is-root { font-size: 14px; font-weight: 700; fill: #f4f6ff; }
+.node-label.is-section { font-weight: 600; font-size: 13px; fill: #e6ecfb; }
+.node-label.is-point { fill: #d5dbec; font-size: 12px; }
+.node-label.is-term { fill: #d8c9ff; font-size: 11.5px; }
+.node-detail {
+  fill: #9aa2ba;
+  font-size: 10.5px;
+  font-family: var(--site-font);
+  pointer-events: none;
+}
+
+/* 收起时的「+N」计数徽标 */
+.collapse-badge circle {
+  fill: rgba(165, 180, 252, 0.22);
+  stroke: rgba(219, 227, 255, 0.5);
+  stroke-width: 1;
+}
+.collapse-badge text {
+  fill: #dbe3ff;
+  font-size: 10.5px;
+  font-weight: 600;
+  font-family: var(--site-font);
+}
+
+/* 悬停 / 聚焦 */
+.mind-node:hover .mind-card {
+  stroke: rgba(219, 227, 255, 0.75);
+  filter: drop-shadow(0 0 16px rgba(165, 180, 252, 0.6));
+}
+.mind-node:focus { outline: none; }
+.mind-node:focus-visible .mind-card {
+  stroke: #dbe3ff;
+  stroke-width: 1.8;
+  stroke-dasharray: 4 3;
+}
+
+/* 章节卡片右侧「回到正文」箭头圆钮 */
+.jump-dot { cursor: pointer; color: #dbe3ff; }
+.jump-dot circle {
+  fill: rgba(165, 180, 252, 0.2);
+  stroke: rgba(219, 227, 255, 0.55);
+  stroke-width: 1;
+  transition: fill calc(180ms * var(--site-motion));
+}
+.jump-dot:hover circle { fill: rgba(165, 180, 252, 0.45); }
+
+/* 图例 */
+.mind-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  padding: 10px 4px 2px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.mind-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.mind-legend-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 10px currentColor;
+}
+.mind-legend-dot.is-root { background: #a5b4fc; color: #a5b4fc; }
+.mind-legend-dot.is-section { background: #93c5fd; color: #93c5fd; }
+.mind-legend-dot.is-point { background: #c4b5fd; color: #c4b5fd; }
+.mind-legend-dot.is-term { background: #f0abfc; color: #f0abfc; }
+
+/* 上传论文的 AI 生成入口 */
+.mind-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 36px 24px;
+  border: 1px dashed var(--border);
+  border-radius: var(--site-radius);
+  background: rgba(20, 22, 40, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--foreground);
+}
+.mind-empty .spark {
+  width: 44px; height: 44px;
+  color: #a5b4fc;
+  filter: drop-shadow(0 0 12px rgba(165, 180, 252, 0.6));
+  animation: spark-pulse calc(2.2s * var(--site-motion)) ease-in-out infinite;
+}
+@keyframes spark-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+/* ============ 完整原文阅读器 ============ */
+.paper-reader {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: calc(2rem * var(--site-space)) clamp(1rem, 4vw, 2.5rem);
+  border-radius: var(--site-radius);
+  border: 1px solid var(--border);
+  background: rgba(16, 18, 30, 0.55);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  color: #dfe4f0;
+}
+.paper-block + .paper-block {
+  margin-top: 1.6rem;
+}
+.paper-h {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #eef1f8;
+  margin-bottom: 0.7rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid rgba(165, 180, 252, 0.22);
+}
+.paper-p {
+  font-size: 1rem;
+  line-height: 1.85;
+  letter-spacing: 0.01em;
+  text-indent: 1.6em;
+  margin: 0 0 0.9rem;
+  text-align: justify;
+  hyphens: auto;
+}
+.paper-p:last-child { margin-bottom: 0; }
+
+/* 原文内联术语：发光关键词，点击弹出对照拆解 */
+.term-inline {
+  display: inline;
+  margin: 0;
+  padding: 0 0.12em;
+  font: inherit;
+  color: #c7d2fe;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px dashed rgba(165, 180, 252, 0.55);
+  border-radius: 3px;
+  cursor: pointer;
+  text-shadow: 0 0 10px rgba(165, 180, 252, 0.45);
+  transition: background-color 160ms ease, border-color 160ms ease,
+    text-shadow 160ms ease;
+}
+.term-inline:hover {
+  background: rgba(165, 180, 252, 0.14);
+  border-bottom-color: rgba(199, 210, 254, 0.9);
+  text-shadow: 0 0 14px rgba(165, 180, 252, 0.7);
+}
+.term-inline:focus-visible {
+  outline: 2px solid rgba(165, 180, 252, 0.85);
+  outline-offset: 2px;
+}
+
+/* 全局动效降级 */
+@media (prefers-reduced-motion: reduce) {
+  .mind-svg .branch {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+  .mind-node { animation: none; opacity: 1; }
+  .mind-empty .spark { animation: none; }
+}
